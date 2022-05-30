@@ -28,21 +28,20 @@ public class FilmController {
         if (isValid(film)) {
             films.put(film.getId(), film);
             log.info("create new film {}", film);
-        } else {
-            log.error("film validation {}", film);
-            throw new ValidationException();
         }
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
-        if (isValid(film) && films.containsKey(film.getId())) {
+        if (!films.containsKey(film.getId())) {
+            String cause = "Film id not found";
+            log.error("film validation {} cause - {}", film, cause);
+            throw new ValidationException(cause);
+        }
+        if (isValid(film)) {
             films.put(film.getId(), film);
             log.info("update film {}", film);
-        } else {
-            log.error("film validation {}", film);
-            throw new ValidationException();
         }
         return film;
     }
@@ -52,11 +51,29 @@ public class FilmController {
         return films.values();
     }
 
-    private boolean isValid(Film film) {
-        return !film.getName().isEmpty()
-                && film.getDescription().length() <= MAX_DESCRIPTION_LENGTH
-                && (film.getReleaseDate().isAfter(FILMS_BIRTHDAY) || film.getReleaseDate().equals(FILMS_BIRTHDAY))
-                && film.getDuration().toSeconds() > 0;
+    private boolean isValid(Film film) throws ValidationException {
+        String cause;
+        if (film.getName().isEmpty()) {
+            cause = "Name is empty";
+            log.error("film validation {} cause - {}", film, cause);
+            throw new ValidationException(cause);
+        }
+        if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
+            cause = "Description is too long";
+            log.error("film validation {} cause - {}", film, cause);
+            throw new ValidationException(cause);
+        }
+        if (!(film.getReleaseDate().isAfter(FILMS_BIRTHDAY) || film.getReleaseDate().equals(FILMS_BIRTHDAY))) {
+            cause = "Release date is wrong";
+            log.error("film validation {} cause - {}", film, cause);
+            throw new ValidationException(cause);
+        }
+        if (film.getDuration().toSeconds() <= 0) {
+            cause = "Duration is wrong";
+            log.error("film validation {} cause - {}", film, cause);
+            throw new ValidationException(cause);
+        }
+        return true;
     }
 
 }

@@ -25,21 +25,20 @@ public class UserController {
         if (isValid(user)) {
             users.put(user.getId(), user);
             log.info("create new user {}", user);
-        } else {
-            log.error("user validation {}", user);
-            throw new ValidationException();
         }
         return user;
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) throws ValidationException {
-        if (isValid(user) && users.containsKey(user.getId())) {
+        if (!users.containsKey(user.getId())) {
+            String cause = "User id not found";
+            log.error("user validation {} cause - ", user, cause);
+            throw new ValidationException(cause);
+        }
+        if (isValid(user)) {
             users.put(user.getId(), user);
             log.info("update user {}", user);
-        } else {
-            log.error("user validation {}", user);
-            throw new ValidationException();
         }
         return user;
     }
@@ -49,15 +48,26 @@ public class UserController {
         return users.values();
     }
 
-    private boolean isValid(User user) {
+    private boolean isValid(User user) throws ValidationException {
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-
-        return !user.getEmail().isEmpty()
-                && user.getEmail().contains("@")
-                && !user.getLogin().isEmpty()
-                && !user.getLogin().contains(" ")
-                && user.getBirthday().isBefore(LocalDate.now());
+        String cause;
+        if (user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
+            cause = "Email is empty or not contains @";
+            log.error("user validation {} cause - ", user, cause);
+            throw new ValidationException(cause);
+        }
+        if (user.getLogin().isEmpty() || user.getLogin().contains(" ")) {
+            cause = "Login is empty or contains space";
+            log.error("user validation {} cause - ", user, cause);
+            throw new ValidationException(cause);
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            cause = "birthday is after now";
+            log.error("user validation {} cause - ", user, cause);
+            throw new ValidationException(cause);
+        }
+        return true;
     }
 }

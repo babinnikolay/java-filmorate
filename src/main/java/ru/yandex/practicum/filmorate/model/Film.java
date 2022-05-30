@@ -11,12 +11,15 @@ import java.time.LocalDate;
 @Data
 public class Film {
     private long id;
+
     @NotBlank
     private String name;
     private String description;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate releaseDate;
+
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     @NotNull
     private Duration duration;
