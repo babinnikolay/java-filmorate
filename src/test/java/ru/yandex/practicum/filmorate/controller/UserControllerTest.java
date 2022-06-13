@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 
@@ -16,9 +19,11 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userController = new UserController();
+        UserStorage userStorage = new InMemoryUserStorage();
+        UserService userService = new UserService(userStorage);
+        userController = new UserController(userService);
         user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setName("name");
         user.setBirthday(LocalDate.of(1900, 12, 1));
         user.setLogin("login");
@@ -28,9 +33,7 @@ public class UserControllerTest {
     @Test
     public void shouldThrowValidationExceptionWhenEmptyEmail() {
         user.setEmail("");
-        assertThrows(ValidationException.class, () -> {
-            userController.addUser(user);
-        });
+        assertThrows(ValidationException.class, () -> userController.addUser(user));
     }
 
     @Test

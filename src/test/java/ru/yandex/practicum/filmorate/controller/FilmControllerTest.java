@@ -4,11 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.Duration;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FilmControllerTest {
 
@@ -17,7 +23,10 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        filmController = new FilmController();
+        FilmStorage filmStorage = new InMemoryFilmStorage();
+        UserStorage userStorage = new InMemoryUserStorage();
+        FilmService filmService = new FilmService(filmStorage, userStorage);
+        filmController = new FilmController(filmService);
         film = new Film();
         film.setId(1);
         film.setDescription("desc");
@@ -29,28 +38,18 @@ public class FilmControllerTest {
     @Test
     public void shouldThrowValidationExceptionWhenNameIsEmpty() {
         film.setName("");
-        assertThrows(ValidationException.class, () -> {
-            filmController.addFilm(film);
-        });
+        assertThrows(ValidationException.class, () -> filmController.addFilm(film));
     }
 
     @Test
     public void shouldThrowValidationExceptionWhenDescriptionLengthIsTooLong() {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 201; i++) {
-            builder.append("a");
-        }
-        film.setDescription(builder.toString());
+        film.setDescription("a".repeat(201));
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
     }
 
     @Test
     public void shouldAddNewFilmWhenDescriptionIsNormalLength() {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 200; i++) {
-            builder.append("a");
-        }
-        film.setDescription(builder.toString());
+        film.setDescription("a".repeat(200));
         assertDoesNotThrow(() -> {
             filmController.addFilm(film);
         });
