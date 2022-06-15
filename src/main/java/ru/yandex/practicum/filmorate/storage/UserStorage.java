@@ -18,4 +18,6 @@ public interface UserStorage {
     User getUserById(Long id) throws UserNotFoundException;
 
     Set<User> getUsersById(Set<Long> friendsId);
+
+    boolean hasUserId(Long userId);
 }

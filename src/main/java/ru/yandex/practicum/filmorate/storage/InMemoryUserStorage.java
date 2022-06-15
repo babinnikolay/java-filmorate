@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     @Override
@@ -44,9 +44,14 @@ public class InMemoryUserStorage implements UserStorage{
 
     @Override
     public Set<User> getUsersById(Set<Long> friendsId) {
-        return users.values()
+        return friendsId
                 .stream()
-                .filter(user -> friendsId.contains(user.getId()))
+                .map(users::get)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean hasUserId(Long userId) {
+        return users.containsKey(userId);
     }
 }

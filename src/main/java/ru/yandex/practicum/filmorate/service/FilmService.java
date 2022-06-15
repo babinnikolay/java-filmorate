@@ -89,15 +89,19 @@ public class FilmService {
 
     public Film addLike(Long id, Long userId) throws FilmNotFoundException, UserNotFoundException {
         Film film = filmStorage.getFilmById(id);
-        User user = userStorage.getUserById(userId);
-        film.addLike(user);
+        if (!userStorage.hasUserId(userId)) {
+            throw new UserNotFoundException();
+        }
+        film.addLike(userId);
         return film;
     }
 
     public Film removeLike(Long id, Long userId) throws FilmNotFoundException, UserNotFoundException {
         Film film = filmStorage.getFilmById(id);
-        User user = userStorage.getUserById(userId);
-        film.removeLike(user);
+        if (!userStorage.hasUserId(userId)) {
+            throw new UserNotFoundException();
+        }
+        film.removeLike(userId);
         return film;
     }
 

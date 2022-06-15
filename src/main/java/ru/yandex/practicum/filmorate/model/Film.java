@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 public class Film {
     private long id;
-    private Set<User> likes = new HashSet<>();
+    private Set<Long> likes = new HashSet<>();
 
     @NotBlank
     private String name;
@@ -27,11 +27,11 @@ public class Film {
     @NotNull
     private Duration duration;
 
-    public void addLike(User user) {
-        likes.add(user);
+    public void addLike(Long userId) {
+        likes.add(userId);
     }
 
-    public void removeLike(User user) {
-        likes.remove(user);
+    public void removeLike(Long userId) {
+        likes.remove(userId);
     }
 }
