@@ -7,10 +7,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
     private long id;
+    private Set<Long> likes = new HashSet<>();
 
     @NotBlank
     private String name;
@@ -23,4 +26,12 @@ public class Film {
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     @NotNull
     private Duration duration;
+
+    public void addLike(Long userId) {
+        likes.add(userId);
+    }
+
+    public void removeLike(Long userId) {
+        likes.remove(userId);
+    }
 }
