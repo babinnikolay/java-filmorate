@@ -7,14 +7,16 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Data
 public class User {
     private Long id;
 
-    private Set<Long> friends = new HashSet<>();
+    private Map<Long, FriendStatus> friends = new HashMap<>();
 
     @Email
     private String email;
@@ -28,7 +30,7 @@ public class User {
     private LocalDate birthday;
 
     public void addFriend(User friend) {
-        friends.add(friend.getId());
+        friends.put(friend.getId(), FriendStatus.UNCONFIRMED);
     }
 
     public void removeFriend(User friend) {

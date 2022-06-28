@@ -96,13 +96,13 @@ public class UserService {
 
     public Set<User> getAllFriends(Long id) throws UserNotFoundException {
         User user = storage.getUserById(id);
-        Set<Long> friendsId = user.getFriends();
+        Set<Long> friendsId = user.getFriends().keySet();
         return storage.getUsersById(friendsId);
     }
 
     public Set<User> getCommonFriends(Long id, Long otherId) throws UserNotFoundException {
-        Set<Long> friends = storage.getUserById(id).getFriends();
-        Set<Long> otherFriends = storage.getUserById(otherId).getFriends();
+        Set<Long> friends = storage.getUserById(id).getFriends().keySet();
+        Set<Long> otherFriends = storage.getUserById(otherId).getFriends().keySet();
         Set<Long> commonFriends = friends
                 .stream()
                 .filter(otherFriends::contains)
