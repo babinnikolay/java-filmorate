@@ -1,0 +1,32 @@
+Film
+-
+film_id PK long
+name string
+description string
+release_date datetime
+duration datetime
+rating_id enum_id
+
+User
+-
+user_id PK long
+email string
+login string
+name string
+birthday datetime
+
+FilmLike
+-
+film_id long FK >-< Film.film_id
+user_id long FK >-< User.user_id
+
+FilmGenre
+-
+film_id long FK >- Film.film_id
+genre_id enum_id
+
+UserFriend
+-
+user_id long FK  >-< User.user_id
+friend_id long FK >-< User.user_id
+friend_status_id enum_id
