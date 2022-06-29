@@ -4,6 +4,8 @@ Simple Filmorate project.
 
 DB table structure and relationships
 
+![alt text](./QuickDBD-export.png)
+
 Table: Film
 
 | column_name   | column_type | column_keys |
