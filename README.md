@@ -4,6 +4,8 @@ Simple Filmorate project.
 
 DB table structure and relationships
 
+Структура таблиц БД
+
 ![alt text](./QuickDBD-export.png)
 
 Table: Film
