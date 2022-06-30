@@ -8,6 +8,9 @@ DB table structure and relationships
 
 Table: Film
 
+Таблица для хранения данных о фильмах, первичный ключ film_id.
+Поле rating_id содержит индекс перечисления рейтингов
+
 | column_name   | column_type | column_keys |
 |---------------|-------------|-------------|
 | film_id       | long        | PK          |
@@ -19,6 +22,8 @@ Table: Film
 
 Table: User
 
+Таблица для хранения пользователей, первичный ключ user_id
+
 | column_name | column_type | column_keys |
 |-------------|-------------|-------------|
 | user_id     | long        | PK          |
@@ -29,6 +34,9 @@ Table: User
 
 Table: FilmLike
 
+Таблица для хранения лайков, отношения с таблицами фильмов и пользователей
+многие ко многим по внешним ключам
+
 | column_name | column_type | column_keys         |
 |-------------|-------------|---------------------|
 | film_id     | long        | FK >-< Film.film_id |
@@ -36,12 +44,18 @@ Table: FilmLike
 
 Table: FilmGenre
 
+Таблица для хранения жанров фильмов многие к одному к таблице фильмов.
+genre_id хранит индекс перечисления жанров
+
 | column_name | column_type | column_keys         |
 |-------------|-------------|---------------------|
 | film_id     | long        | FK  >- Film.film_id |
 | genre_id    | enum_id     |                     |
 
 Table: UserFriend
+
+Таблица для хранения друзей. Многие ко многим с таблицей пользователей.
+Поле friend_status_id хранит индекс перечисления статусов
 
 | column_name      | column_type | column_keys          |
 |------------------|-------------|----------------------|
