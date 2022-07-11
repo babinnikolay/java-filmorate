@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -8,16 +9,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Data
 public class User {
+
+    @JsonIgnore
+    private Map<User, FriendStatus> friends = new HashMap<>();
+
     private Long id;
-
-    private Map<Long, FriendStatus> friends = new HashMap<>();
-
     @Email
     private String email;
 
@@ -29,11 +29,19 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
-    public void addFriend(User friend) {
-        friends.put(friend.getId(), FriendStatus.UNCONFIRMED);
+    public User(Long id, String email, String login, String name, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
     }
 
-    public void removeFriend(User friend) {
-        friends.remove(friend.getId());
+    public User() {
     }
+
+    public void addFriend(User friend, FriendStatus status) {
+        friends.put(friend, status);
+    }
+
 }

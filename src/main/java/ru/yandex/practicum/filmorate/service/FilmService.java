@@ -19,23 +19,24 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FilmService {
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private long nextId = 1;
     private static final int MAX_DESCRIPTION_LENGTH = 200;
     private static final LocalDate FILMS_BIRTHDAY = LocalDate.of(1895, 12, 28);
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private long filmNextId;
 
     @Autowired
     public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        filmNextId = filmStorage.getStartId();
     }
 
     public Film addFilm(Film film) throws ValidationException {
-        film.setId(nextId);
+        film.setId(filmNextId);
         if (isValid(film)) {
             filmStorage.addFilm(film);
-            nextId++;
+            filmNextId++;
             log.info("create new film {}", film);
         }
         return film;
@@ -75,7 +76,7 @@ public class FilmService {
             log.error("film validation {} cause - {}", film, cause);
             throw new ValidationException(cause);
         }
-        if (film.getDuration().toSeconds() <= 0) {
+        if (film.getDuration() <= 0) {
             cause = "Duration is wrong";
             log.error("film validation {} cause - {}", film, cause);
             throw new ValidationException(cause);
@@ -89,20 +90,26 @@ public class FilmService {
 
     public Film addLike(Long id, Long userId) throws FilmNotFoundException, UserNotFoundException {
         Film film = filmStorage.getFilmById(id);
-        if (!userStorage.hasUserId(userId)) {
+        User user = userStorage.getUserById(userId);
+        if (film == null) {
+            throw new FilmNotFoundException();
+        }
+        if (user == null) {
             throw new UserNotFoundException();
         }
-        film.addLike(userId);
-        return film;
+        return filmStorage.addLike(film, user);
     }
 
     public Film removeLike(Long id, Long userId) throws FilmNotFoundException, UserNotFoundException {
         Film film = filmStorage.getFilmById(id);
-        if (!userStorage.hasUserId(userId)) {
+        User user = userStorage.getUserById(userId);
+        if (film == null) {
+            throw new FilmNotFoundException();
+        }
+        if (user == null) {
             throw new UserNotFoundException();
         }
-        film.removeLike(userId);
-        return film;
+        return filmStorage.removeLike(film, user);
     }
 
     public List<Film> getPopular(Integer count) {
