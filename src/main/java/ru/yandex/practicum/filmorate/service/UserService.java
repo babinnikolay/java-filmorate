@@ -35,8 +35,11 @@ public class UserService {
         return user;
     }
 
-    public User updateUser(User user) throws ValidationException {
+    public User updateUser(User user) throws ValidationException, UserNotFoundException {
         validation(user);
+        if (storage.getUserById(user.getId()) == null) {
+            throw new UserNotFoundException();
+        }
         storage.updateUser(user);
         log.info("update user {}", user);
         return user;
