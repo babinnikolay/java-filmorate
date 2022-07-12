@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.model.FriendStatus;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface UserStorage {
@@ -23,4 +24,6 @@ public interface UserStorage {
     Map<User, FriendStatus> getUserFriendsById(Long id);
 
     User removeFriend(Long userId, Long friendId) throws UserNotFoundException;
+
+    List<User> getCommonFriends(Long id, Long otherId);
 }

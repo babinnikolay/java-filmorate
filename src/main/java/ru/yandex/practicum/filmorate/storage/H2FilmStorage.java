@@ -129,6 +129,22 @@ public class H2FilmStorage implements FilmStorage {
         return film;
     }
 
+    @Override
+    public List<Film> getPopularFilms(Integer limit) {
+        String query = "SELECT F.*\n" +
+                "FROM FILM AS F\n" +
+                "         LEFT JOIN\n" +
+                "     (SELECT film_id, COUNT(user_id) AS COUNT\n" +
+                "      FROM FILM_LIKE\n" +
+                "      GROUP BY film_id\n" +
+                "      ORDER BY COUNT(user_id)\n" +
+                "      ) AS LIKES\n" +
+                "    ON F.FILM_ID = LIKES.FILM_ID\n" +
+                "ORDER BY IFNULL(LIKES.COUNT, 0) DESC\n" +
+                "LIMIT ?";
+        return jdbcTemplate.query(query, (rs, rowNum) -> makeFilm(rs.getLong("film_id"), rs), limit);
+    }
+
     private void insertFilmGenre(Film film) {
         String queryGenres = "INSERT INTO film_genre" +
                 "(film_id, genre_id) " +

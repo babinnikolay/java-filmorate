@@ -4,9 +4,8 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.FriendStatus;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
@@ -57,6 +56,16 @@ public class InMemoryUserStorage implements UserStorage {
     public User removeFriend(Long userId, Long friendId) {
         users.get(userId).getFriends().remove(friendId);
         return users.get(userId);
+    }
+
+    @Override
+    public List<User> getCommonFriends(Long id, Long otherId) {
+        Set<User> friends = getUserFriendsById(id).keySet();
+        Set<User> otherFriends = getUserFriendsById(otherId).keySet();
+        return friends
+                .stream()
+                .filter(otherFriends::contains)
+                .collect(Collectors.toList());
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.FilmGenreNotFoundException;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
-import ru.yandex.practicum.filmorate.serialize.FilmGenreService;
+import ru.yandex.practicum.filmorate.service.FilmGenreService;
 
 import java.util.List;
 

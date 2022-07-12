@@ -137,6 +137,17 @@ public class H2UserStorage implements UserStorage {
         return user;
     }
 
+    @Override
+    public List<User> getCommonFriends(Long id, Long otherId) {
+        String query = "SELECT * FROM FILMORATE_USER WHERE USER_ID IN (" +
+                " SELECT U.FRIEND_ID FROM USER_FRIEND AS U" +
+                " JOIN (SELECT F.* FROM USER_FRIEND AS F WHERE USER_ID = ?) AS F" +
+                " WHERE U.USER_ID = ?" +
+                "   AND U.FRIEND_ID = F.FRIEND_ID" +
+                " GROUP BY U.FRIEND_ID)";
+        return jdbcTemplate.query(query, (rs, rowNum) -> makeUser(rs.getLong("user_id"), rs), id, otherId);
+    }
+
     private User makeUser(long userId, ResultSet rs) throws SQLException {
 
         String email = rs.getString("email");
