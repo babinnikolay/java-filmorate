@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/mpa")
 public class FilmRatingController {
 
-    FilmRatingService service;
+    private final FilmRatingService service;
 
     @Autowired
     public FilmRatingController(FilmRatingService service) {

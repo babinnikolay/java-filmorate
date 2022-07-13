@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/genres")
 public class FilmGenreController {
 
-    FilmGenreService service;
+    private final FilmGenreService service;
 
     @Autowired
     public FilmGenreController(FilmGenreService service) {
