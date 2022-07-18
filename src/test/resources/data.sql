@@ -1,0 +1,38 @@
+DELETE
+FROM FILM_GENRE
+WHERE FILM_ID IN (1, 2);
+
+DELETE
+FROM FILM
+WHERE FILM_ID IN (1, 2);
+
+INSERT INTO FILM (FILM_ID, NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)
+VALUES (1,
+        'FILM NAME',
+        'DESCRIPTION FILM TEXT',
+        PARSEDATETIME('01.01.2000 12:22', 'dd.MM.yyy HH:mm'),
+           --2h:02m in minutes
+        2 * 60 + 2,
+        1);
+
+INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID)
+VALUES (1, 1);
+
+INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID)
+VALUES (1, 2);
+
+INSERT INTO FILM (FILM_ID, NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)
+VALUES (2,
+        'FILM NAME 2',
+        'DESCRIPTION FILM TEXT 2',
+        PARSEDATETIME('01.01.2020 12:22', 'dd.MM.yyy HH:mm'),
+           --1h:30m in minutes
+        60 + 30,
+        2);
+
+INSERT INTO FILMORATE_USER (USER_ID, EMAIL, LOGIN, NAME, BIRTHDAY)
+VALUES (1,
+        'email@email.com',
+        'login',
+        'nameUser',
+        PARSEDATETIME('01.01.2020 12:22', 'dd.MM.yyy HH:mm'));

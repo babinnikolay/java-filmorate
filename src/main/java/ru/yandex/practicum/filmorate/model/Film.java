@@ -5,17 +5,16 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class Film {
     private long id;
-    private Set<Long> likes = new HashSet<>();
-    private Set<FilmGenre> genres = new HashSet<>();
-    private FilmRating rating;
+    private List<Long> likes = new ArrayList<>();
+    private List<FilmGenre> genres = new ArrayList<>();
+    private FilmRating mpa;
 
     @NotBlank
     private String name;
@@ -25,9 +24,20 @@ public class Film {
     @NotNull
     private LocalDate releaseDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     @NotNull
-    private Duration duration;
+    private int duration;
+
+    public Film() {
+    }
+
+    public Film(long id, FilmRating mpa, String name, String description, LocalDate releaseDate, int duration) {
+        this.id = id;
+        this.mpa = mpa;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
 
     public void addLike(Long userId) {
         likes.add(userId);

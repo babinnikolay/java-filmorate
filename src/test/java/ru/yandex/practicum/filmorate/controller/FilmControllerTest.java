@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -25,12 +25,12 @@ public class FilmControllerTest {
     public void setUp() {
         FilmStorage filmStorage = new InMemoryFilmStorage();
         UserStorage userStorage = new InMemoryUserStorage();
-        FilmService filmService = new FilmService(filmStorage, userStorage);
+        FilmService filmService = new FilmServiceImpl(filmStorage, userStorage);
         filmController = new FilmController(filmService);
         film = new Film();
         film.setId(1);
         film.setDescription("desc");
-        film.setDuration(Duration.ofMinutes(180));
+        film.setDuration((180));
         film.setName("name");
         film.setReleaseDate(LocalDate.of(1900, 10, 10));
     }
@@ -71,19 +71,19 @@ public class FilmControllerTest {
 
     @Test
     public void shouldThrowValidationExceptionWhenDurationIsNegative() {
-        film.setDuration(Duration.ofMinutes(-1));
+        film.setDuration((-1));
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
     }
 
     @Test
     public void shouldThrowValidationExceptionWhenDurationIsZero() {
-        film.setDuration(Duration.ofMinutes(0));
+        film.setDuration((0));
         assertThrows(ValidationException.class, () -> filmController.addFilm(film));
     }
 
     @Test
     public void shouldAddNewFilmWhenDurationIsPositive() {
-        film.setDuration(Duration.ofMinutes(1));
+        film.setDuration((1));
         assertDoesNotThrow(() -> filmController.addFilm(film));
     }
 
